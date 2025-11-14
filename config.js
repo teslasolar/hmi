@@ -18,8 +18,8 @@
 const HMI_CONFIG = {
   // ===== COMMUNICATION SETTINGS =====
   connection: {
-    plcUrl: null,                                  // PLC iframe URL (set to null for simulation mode)
-    // plcUrl: 'https://teslasolar.github.io/plc/', // Uncomment when PLC is ready
+    plcUrl: 'https://teslasolar.github.io/plc/',  // PLC iframe URL (set to null for simulation only)
+    // plcUrl: null,                               // Use this for pure simulation mode
     pollRate: 100,                                 // Data polling rate in milliseconds
     timeout: 2000,                                 // Connection timeout before fallback
     enableSimulation: true,                        // Enable fallback simulation if PLC unavailable

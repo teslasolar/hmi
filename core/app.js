@@ -33,6 +33,13 @@ class HMIApp {
     console.log('✅ HMI Ready');
     console.log(`📡 PLC: ${this.config.connection.plcUrl || 'SIMULATION'}`);
     console.log(`⚡ Rate: ${this.config.connection.pollRate}ms`);
+
+    // Show connection mode after a moment
+    setTimeout(() => {
+      if (this.bridge.mode) {
+        console.log(`🔌 Connection Mode: ${this.bridge.mode.toUpperCase()}`);
+      }
+    }, 3000);
   }
 }
 

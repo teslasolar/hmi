@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>PLC API Test</title>
+  <style>
+    body {
+      font-family: monospace;
+      padding: 20px;
+      background: #111;
+      color: #0f0;
+    }
+    .success { color: #0f0; }
+    .error { color: #f00; }
+    .info { color: #ff0; }
+  </style>
+</head>
+<body>
+  <h1>🔍 Testing PLC Connection</h1>
+  <div id="output"></div>
+
+  <iframe id="plc" src="https://teslasolar.github.io/plc/" style="display:none;"></iframe>
+
+  <script>
+    const log = (msg, type = 'info') => {
+      const div = document.createElement('div');
+      div.className = type;
+      div.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
+      document.getElementById('output').appendChild(div);
+      console.log(msg);
+    };
+
+    log('Loading PLC iframe...', 'info');
+
+    // Test 1: Listen for postMessage responses
+    window.addEventListener('message', (e) => {
+      log(`Received message from: ${e.origin}`, 'success');
+      log(`Data type: ${typeof e.data}`, 'info');
+      if (e.data) {
+        const preview = JSON.stringify(e.data).substring(0, 300);
+        log(`Data preview: ${preview}`, 'success');
+      }
+    });
+
+    // Test after iframe loads
+    setTimeout(() => {
+      const iframe = document.getElementById('plc');
+
+      log('--- Test 1: postMessage approach ---', 'info');
+      try {
+        iframe.contentWindow.postMessage({ cmd: 'getData' }, '*');
+        log('Sent postMessage with getData command', 'info');
+      } catch (e) {
+        log(`postMessage error: ${e.message}`, 'error');
+      }
+
+      // Wait for response, then test PlcAPI
+      setTimeout(() => {
+        log('--- Test 2: window.PlcAPI approach ---', 'info');
+        try {
+          if (iframe.contentWindow.PlcAPI) {
+            log('Found window.PlcAPI!', 'success');
+            const methods = Object.keys(iframe.contentWindow.PlcAPI);
+            log(`Available methods: ${methods.join(', ')}`, 'success');
+
+            if (iframe.contentWindow.PlcAPI.getAllData) {
+              const data = iframe.contentWindow.PlcAPI.getAllData();
+              log(`Data received: ${JSON.stringify(data).substring(0, 300)}`, 'success');
+            }
+          } else {
+            log('No window.PlcAPI found', 'error');
+          }
+        } catch (e) {
+          log(`PlcAPI error: ${e.message}`, 'error');
+          log('This might be a CORS issue', 'info');
+        }
+
+        // Check window properties
+        log('--- Test 3: Checking iframe window ---', 'info');
+        try {
+          const props = Object.keys(iframe.contentWindow);
+          log(`Window has ${props.length} properties`, 'info');
+          const plcRelated = props.filter(p => p.toLowerCase().includes('plc'));
+          if (plcRelated.length > 0) {
+            log(`PLC-related properties: ${plcRelated.join(', ')}`, 'success');
+          }
+        } catch (e) {
+          log(`Cannot access iframe window (CORS): ${e.message}`, 'error');
+        }
+      }, 3000);
+    }, 2000);
+  </script>
+</body>
+</html>
