@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>HMI Debug Test</title>
+  <script>
+    // Capture all errors
+    window.addEventListener('error', (e) => {
+      console.error('ERROR:', e.message, e.filename, e.lineno);
+      document.body.innerHTML += `<div style="color:red;padding:10px;background:#fee;">
+        ERROR: ${e.message}<br>
+        File: ${e.filename}<br>
+        Line: ${e.lineno}
+      </div>`;
+    });
+
+    // Capture module errors
+    window.addEventListener('unhandledrejection', (e) => {
+      console.error('PROMISE REJECTION:', e.reason);
+      document.body.innerHTML += `<div style="color:orange;padding:10px;background:#ffe;">
+        PROMISE ERROR: ${e.reason}
+      </div>`;
+    });
+
+    console.log('Test page loaded');
+  </script>
+</head>
+<body style="font-family:monospace;padding:20px;background:#111;color:#0f0;">
+  <h1>🧪 HMI Module Test</h1>
+  <div id="status">Loading...</div>
+
+  <script src="config.js"></script>
+  <script>
+    document.getElementById('status').innerHTML =
+      'Config loaded: ' + (typeof HMI_CONFIG !== 'undefined' ? '✓' : '✗');
+    console.log('HMI_CONFIG:', window.HMI_CONFIG);
+  </script>
+
+  <script type="module">
+    console.log('Module script starting...');
+
+    try {
+      const { default: PLCBridge } = await import('./core/bridge.js');
+      console.log('✓ PLCBridge loaded');
+      document.body.innerHTML += '<div>✓ PLCBridge loaded</div>';
+
+      const { default: HMIScreen } = await import('./core/screen.js');
+      console.log('✓ HMIScreen loaded');
+      document.body.innerHTML += '<div>✓ HMIScreen loaded</div>';
+
+      const { default: HMIApp } = await import('./core/app.js');
+      console.log('✓ HMIApp loaded');
+      document.body.innerHTML += '<div>✓ HMIApp loaded</div>';
+
+      document.body.innerHTML += '<div style="color:lime;font-weight:bold;margin-top:20px;">✓ ALL MODULES LOADED SUCCESSFULLY!</div>';
+    } catch (err) {
+      console.error('Module load error:', err);
+      document.body.innerHTML += `<div style="color:red;padding:10px;background:#300;margin-top:20px;">
+        <strong>MODULE ERROR:</strong><br>
+        ${err.message}<br>
+        ${err.stack}
+      </div>`;
+    }
+  </script>
+</body>
+</html>

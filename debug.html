@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HMI Debug</title>
+  <link rel="stylesheet" href="styles/main.css">
+  <style>
+    #debug {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #000;
+      color: #0f0;
+      border-top: 2px solid #0f0;
+      padding: 10px;
+      font-family: monospace;
+      font-size: 12px;
+      max-height: 200px;
+      overflow-y: auto;
+      z-index: 9999;
+    }
+    .error { color: #f00; }
+    .success { color: #0f0; }
+    .warning { color: #ff0; }
+  </style>
+</head>
+<body>
+  <!-- HMI Container -->
+  <div id="hmi">
+    <div class="header">
+      <div class="header-left">
+        <div class="header-title">⚡ HMI SUPERVISOR [DEBUG]</div>
+        <div class="isa-level">ISA-95 L2 | SCADA</div>
+      </div>
+      <div class="header-right">
+        <div class="timestamp" id="timestamp">--:--:--</div>
+        <div id="status" class="disconnected" title="Connection Status"></div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="panel">
+        <div class="panel-title">📊 ANALOG INPUTS</div>
+        <div id="gauges"></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title">📈 TREND CHARTS</div>
+        <div id="trends"></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title">🎮 CONTROLS</div>
+        <div id="controls"></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title">🚨 ALARM LOG</div>
+        <div id="alarms"></div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <div class="plc-info">
+        <span>PLC: <span id="plc-vendor">--</span></span>
+        <span>State: <span id="plc-state">--</span></span>
+        <span>Scan: <span id="scan-time">--</span>ms</span>
+      </div>
+      <div>HMI v1.0 | DEBUG MODE</div>
+    </div>
+  </div>
+
+  <!-- Debug Console -->
+  <div id="debug">
+    <div class="success">✓ Debug console ready</div>
+  </div>
+
+  <script>
+    const debugLog = (msg, type = 'info') => {
+      const div = document.createElement('div');
+      div.className = type;
+      div.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
+      document.getElementById('debug').appendChild(div);
+      console.log(msg);
+    };
+
+    window.addEventListener('error', (e) => {
+      debugLog(`ERROR: ${e.message} at ${e.filename}:${e.lineno}`, 'error');
+    });
+
+    window.addEventListener('unhandledrejection', (e) => {
+      debugLog(`PROMISE REJECT: ${e.reason}`, 'error');
+    });
+
+    debugLog('Page loaded');
+  </script>
+
+  <!-- Configuration -->
+  <script src="config.js"></script>
+  <script>
+    if (typeof HMI_CONFIG !== 'undefined') {
+      debugLog('✓ Config loaded', 'success');
+      debugLog(`  PLC URL: ${HMI_CONFIG.connection.plcUrl || 'SIMULATION'}`, 'info');
+      debugLog(`  Poll Rate: ${HMI_CONFIG.connection.pollRate}ms`, 'info');
+    } else {
+      debugLog('✗ Config NOT loaded', 'error');
+    }
+  </script>
+
+  <!-- Core Modules -->
+  <script type="module">
+    debugLog('Starting module import...');
+
+    try {
+      debugLog('Importing PLCBridge...');
+      const { default: PLCBridge } = await import('./core/bridge.js');
+      debugLog('✓ PLCBridge imported', 'success');
+
+      debugLog('Importing HMIScreen...');
+      const { default: HMIScreen } = await import('./core/screen.js');
+      debugLog('✓ HMIScreen imported', 'success');
+
+      debugLog('Importing HMIApp...');
+      const { default: HMIApp } = await import('./core/app.js');
+      debugLog('✓ HMIApp imported', 'success');
+
+      debugLog('Creating HMIApp instance...');
+      const app = new HMIApp(window.HMI_CONFIG);
+
+      debugLog('Initializing HMI...');
+      await app.init();
+
+      debugLog('✓ HMI FULLY INITIALIZED!', 'success');
+
+    } catch (err) {
+      debugLog(`✗ FATAL ERROR: ${err.message}`, 'error');
+      debugLog(`Stack: ${err.stack}`, 'error');
+    }
+  </script>
+</body>
+</html>

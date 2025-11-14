@@ -18,8 +18,12 @@ class PLCBridge {
 
     if (this.url) {
       this.initIframe();
-    } else if (config.enableSimulation) {
-      this.startSimulation();
+    } else {
+      if (config.enableSimulation) {
+        this.startSimulation();
+      } else {
+        console.error('No PLC URL and simulation disabled');
+      }
     }
   }
 
@@ -39,14 +43,17 @@ class PLCBridge {
 
     // Fallback timeout
     setTimeout(() => {
-      if (!this.connected) {
+      if (!this.connected && this.url) {
         console.warn('PLC timeout - switching to simulation');
-        this.startSimulation();
+        if (typeof window.HMI_CONFIG !== 'undefined' && window.HMI_CONFIG.connection.enableSimulation) {
+          this.startSimulation();
+        }
       }
     }, this.timeout);
   }
 
   startSimulation() {
+    console.log('Starting simulation mode');
     this.connected = true;
     this.simulator = new PLCSimulator(this.pollRate);
     this.simulator.start(data => this.notifyCallbacks(data));
