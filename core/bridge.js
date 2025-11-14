@@ -142,6 +142,13 @@ class PLCBridge {
 
   subscribe(callback) {
     this.callbacks.push(callback);
+
+    // Send immediate update if already connected and have data
+    if (this.connected && this.data) {
+      console.log('Sending immediate update to new subscriber');
+      callback(this.data);
+    }
+
     // Start postMessage polling if in postMessage mode
     if (this.mode === 'postmessage') {
       setInterval(() => this.request(), this.pollRate);

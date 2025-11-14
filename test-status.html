@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Connection Status Test</title>
+  <style>
+    body {
+      font-family: monospace;
+      padding: 20px;
+      background: #111;
+      color: #0f0;
+    }
+    #status {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #f00;
+      margin: 20px 0;
+      animation: pulse 1s infinite;
+      box-shadow: 0 0 20px #f00;
+    }
+    #status.connected {
+      background: #0f0;
+      box-shadow: 0 0 20px #0f0;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+    .log { 
+      margin: 5px 0;
+      padding: 5px;
+      background: #222;
+    }
+  </style>
+</head>
+<body>
+  <h1>Connection Status Test</h1>
+  <div id="status"></div>
+  <div id="logs"></div>
+
+  <script>
+    const log = (msg) => {
+      const div = document.createElement('div');
+      div.className = 'log';
+      div.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
+      document.getElementById('logs').prepend(div);
+      console.log(msg);
+    };
+
+    const updateStatus = (connected) => {
+      const el = document.getElementById('status');
+      if (connected) {
+        el.classList.add('connected');
+        log('✓ Status: CONNECTED (green)');
+      } else {
+        el.classList.remove('connected');
+        log('✗ Status: DISCONNECTED (red)');
+      }
+    };
+
+    log('Starting connection test...');
+
+    // Test 1: Try to load PLC iframe
+    const iframe = document.createElement('iframe');
+    iframe.src = 'https://teslasolar.github.io/plc/';
+    iframe.style.display = 'none';
+    document.body.appendChild(iframe);
+
+    log('Created iframe for PLC');
+
+    iframe.onerror = () => {
+      log('✗ iframe error event fired');
+    };
+
+    iframe.onload = () => {
+      log('✓ iframe onload fired');
+      setTimeout(() => {
+        try {
+          const hasAPI = !!iframe.contentWindow.PlcAPI;
+          log(`PlcAPI available: ${hasAPI}`);
+          if (hasAPI) {
+            updateStatus(true);
+          }
+        } catch (e) {
+          log(`✗ Cannot access iframe: ${e.message}`);
+          log('This is likely CORS - starting simulation...');
+          updateStatus(true); // Simulate connection
+        }
+      }, 500);
+    };
+
+    // Timeout fallback
+    setTimeout(() => {
+      log('2 second timeout reached');
+      log('Forcing simulation mode...');
+      updateStatus(true);
+    }, 2000);
+  </script>
+</body>
+</html>

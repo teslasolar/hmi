@@ -28,6 +28,11 @@ class PLCSimulator {
   }
 
   start(callback) {
+    // Send initial data immediately
+    this.updateData();
+    callback(this.data);
+
+    // Then start polling
     setInterval(() => {
       this.updateData();
       callback(this.data);

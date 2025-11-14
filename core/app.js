@@ -30,6 +30,9 @@ class HMIApp {
       this.hmi.updateConnectionStatus(this.bridge.connected);
     });
 
+    // Force initial status update
+    this.hmi.updateConnectionStatus(this.bridge.connected);
+
     console.log('✅ HMI Ready');
     console.log(`📡 PLC: ${this.config.connection.plcUrl || 'SIMULATION'}`);
     console.log(`⚡ Rate: ${this.config.connection.pollRate}ms`);
