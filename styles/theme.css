@@ -1,0 +1,30 @@
+/**
+ * Theme Styles - Colors, Animations, Effects
+ * Visual polish and feedback
+ */
+
+/* Status Indicator */
+#status {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #0f0;
+  animation: pulse 1s infinite;
+  box-shadow: 0 0 10px #0f0;
+}
+
+#status.disconnected {
+  background: #f00;
+  box-shadow: 0 0 10px #f00;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #000; }
+::-webkit-scrollbar-thumb { background: #0f0; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { box-shadow: 0 0 5px #0f0; }

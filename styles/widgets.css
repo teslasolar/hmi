@@ -1,0 +1,7 @@
+/**
+ * Widget Styles - Import All Widget Stylesheets
+ * Component-specific styling
+ */
+
+@import url('monitoring.css');
+@import url('controls.css');

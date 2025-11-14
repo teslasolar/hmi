@@ -1,0 +1,31 @@
+/**
+ * Monitoring Widgets - Gauges & Trends
+ * Display components for process visualization
+ */
+
+/* Gauges */
+#gauges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.gauge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 10px;
+}
+
+.gauge .label { margin-bottom: 10px; font-weight: bold; text-transform: uppercase; }
+.gauge canvas { border: 1px solid #0f0; border-radius: 5px; background: #000; }
+.gauge .value { margin-top: 10px; font-size: 20px; font-weight: bold; }
+.gauge .units { font-size: 12px; opacity: 0.7; margin-top: 2px; }
+
+/* Trends */
+#trends { display: flex; flex-direction: column; gap: 15px; }
+.trend { display: flex; flex-direction: column; }
+.trend .label { margin-bottom: 5px; font-weight: bold; text-transform: uppercase; }
+.trend canvas { border: 1px solid #0f0; background: #000; width: 100%; }

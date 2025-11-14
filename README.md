@@ -53,11 +53,34 @@ High-performance Human-Machine Interface for industrial automation following ISA
 
 ```
 hmi/
-├── index.html          # Main HMI application (single-file)
-├── config.js           # Configuration file
-├── README.md           # This file
-└── .git/               # Git repository
+├── index.html              # Minimal HTML template
+├── config.js               # Configuration file
+├── core/                   # Core application logic (~800 tokens)
+│   ├── app.js              # Main entry point (113 tokens)
+│   ├── bridge.js           # PLC communication (189 tokens)
+│   ├── bridge-sim.js       # Simulation mode (168 tokens)
+│   ├── screen.js           # Screen orchestrator (204 tokens)
+│   └── screen-factory.js   # Widget factory (133 tokens)
+├── widgets/                # UI components (~609 tokens)
+│   ├── gauge.js            # Arc-style gauge (235 tokens)
+│   ├── trend.js            # Historical chart (197 tokens)
+│   ├── button.js           # Control button (77 tokens)
+│   └── alarm.js            # Event log (100 tokens)
+├── styles/                 # Stylesheets (~696 tokens)
+│   ├── main.css            # Import entry (20 tokens)
+│   ├── layout.css          # Grid and panels (224 tokens)
+│   ├── monitoring.css      # Gauges and trends (125 tokens)
+│   ├── controls.css        # Buttons and alarms (219 tokens)
+│   ├── widgets.css         # Widget imports (17 tokens)
+│   └── theme.css           # Colors and effects (91 tokens)
+├── docs/                   # Documentation
+│   ├── ARCHITECTURE.md     # System architecture
+│   └── API.md              # Developer API reference
+├── README.md               # This file
+└── .git/                   # Git repository
 ```
+
+**Modular Design**: All files <250 tokens for easy maintenance and scalability.
 
 ---
 

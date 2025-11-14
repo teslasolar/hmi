@@ -1,0 +1,58 @@
+/**
+ * Control Widgets - Buttons & Alarms
+ * Interactive components for operator input and alerts
+ */
+
+/* Controls */
+#controls { display: flex; flex-direction: column; gap: 10px; }
+.control-group { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 10px; }
+.control-group-title {
+  width: 100%;
+  font-size: 12px;
+  opacity: 0.7;
+  margin-bottom: 5px;
+  text-transform: uppercase;
+}
+
+.hmi-btn {
+  background: #333;
+  color: #0f0;
+  border: 2px solid #0f0;
+  padding: 12px 24px;
+  cursor: pointer;
+  font: 14px 'Courier New', monospace;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: all 0.2s;
+  flex: 1;
+  min-width: 120px;
+}
+
+.hmi-btn:hover { background: #0f0; color: #000; box-shadow: 0 0 10px #0f0; }
+.hmi-btn:active { transform: scale(0.98); }
+.hmi-btn.active { background: #0f0; color: #000; }
+.hmi-btn.danger { border-color: #f00; color: #f00; }
+.hmi-btn.danger:hover { background: #f00; color: #000; box-shadow: 0 0 10px #f00; }
+
+/* Alarms (ISA-18.2) */
+#alarms { flex: 1; overflow-y: auto; }
+.alarm-list { display: flex; flex-direction: column; gap: 5px; }
+
+.alarm {
+  padding: 8px 12px;
+  border-left: 4px solid;
+  font-size: 12px;
+  display: flex;
+  justify-content: space-between;
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from { transform: translateX(-10px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+.alarm.high { border-color: #f00; background: #300; color: #f00; }
+.alarm.med { border-color: #ff0; background: #330; color: #ff0; }
+.alarm.low { border-color: #0f0; background: #030; color: #0f0; }
+.alarm-time { opacity: 0.7; font-size: 11px; }

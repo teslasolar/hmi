@@ -1,0 +1,91 @@
+/**
+ * Layout Styles - Grid and Panel Structure
+ * ISA-101 compliant responsive layout
+ */
+
+/* Base */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: #000;
+  color: #0f0;
+  font: 14px 'Courier New', monospace;
+  overflow: hidden;
+}
+
+/* Container */
+#hmi {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header */
+.header {
+  background: #111;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid #0f0;
+  height: 50px;
+}
+
+.header-left { display: flex; align-items: center; gap: 20px; }
+.header-title { font-size: 18px; font-weight: bold; letter-spacing: 2px; }
+.isa-level { font-size: 12px; opacity: 0.7; }
+.header-right { display: flex; align-items: center; gap: 15px; }
+.timestamp { font-size: 12px; opacity: 0.8; }
+
+/* Grid */
+.container {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 10px;
+  padding: 10px;
+  overflow: hidden;
+}
+
+.panel {
+  background: #111;
+  border: 2px solid #0f0;
+  padding: 15px;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.panel-title {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #0f0;
+  opacity: 0.8;
+}
+
+/* Footer */
+.footer {
+  background: #111;
+  padding: 8px 20px;
+  border-top: 2px solid #0f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+  opacity: 0.7;
+  height: 30px;
+}
+
+.plc-info { display: flex; gap: 20px; }
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .container {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+  }
+}

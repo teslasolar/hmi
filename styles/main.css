@@ -1,0 +1,8 @@
+/**
+ * Main Stylesheet - Import All Styles
+ * ISA-101 HMI Design System
+ */
+
+@import url('layout.css');
+@import url('widgets.css');
+@import url('theme.css');
